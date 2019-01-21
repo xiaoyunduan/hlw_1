@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Home</title>
+<link href="/css/style3.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta name="keywords" content="Easy Subscribe Form Responsive, Login form web template, Sign up Web Templates, Flat Web Templates, Login signup Responsive web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+<!--google fonts-->
+<link href='http://fonts.useso.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+<script language="javascript" type="text/javascript" src="/js/index/header.js"></script>
+</head>
+<body>
+<script language="javascript" type="text/javascript" src="/js/index/body.js"></script>
+
+  <div class="newsletter">
+  	 <div class="newsletter-main">
+  	 	<div class="stamp">
+  	 	    <img src="/images/stamp.png" alt="">
+  	 	</div>
+  	 	<h1>护林网</h1>
+  	 	<h2>邮件系统</h2>
+  	 	<div class="design">
+  	 	   <img src="/images/design.png">
+  	 	</div>
+  	 	<p>我们会发送链接以下邮箱</p>
+  	 	<a href="#" class="signup">您的邮箱</a>
+  	 	<form id="emailForm" action="##" method="post">
+  	 		<input type="text"  name="youEmail" value="你的邮箱" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '你的邮箱地址';}">		
+  	 			<input type="button"  value="发送" onclick="SendEmail()"/>
+  	 			
+  	 	</form>
+  	 	<div class="design">
+  	 	  <img src="/images/design.png">
+  	 	</div>
+  	 	<div class="tlg">
+  	 		<div class="tlg-img">
+  	 			<img src="/images/tlg.png">	 			
+  	 		</div>
+  	 		<div class="tlg-text">
+  	 			
+  	 		</div>
+  	 	  <div class="clear"> </div>
+  	 	</div>
+  	 </div>
+  </div>
+  <div class="copy-right">
+	
+</div>
+<script src='/js/jquery.min.js'></script>
+<script type="text/javascript">
+function SendEmail(){
+  $.ajax({
+         type: "POST",                           //传数据的方式
+         url: "http://localhost:8080/hlw/backstage/emailSend",
+//servlet地址,需要提前在web.xml里面注册
+       	 dataType:"text",
+         data: $('#emailForm').serialize(),      //传的数据  form表单 里面的数据
+         success: function(result){       //传数据成功之后的操作   result是servlet传过来的数据  这个函数对result进行处理，让它显示在 输入框中
+        	 alert(result);         
+         },
+         error : function() {
+             alert("异常！");
+         }
+     })
+  }
+ </script>
+</body>
+</html>

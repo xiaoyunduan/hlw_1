@@ -1,0 +1,770 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="css/admin_login.css" rel="stylesheet" type="text/css" />
+    <style>
+        body,html,div,header{
+            margin:0;
+            padding:0;}
+        #map_show {width: 100%; height:500px; overflow: hidden;}
+        #cleanAll{
+        width:80px;
+        height:40px;
+        bottom: 100px;
+        right:30px;
+        border-radius:2em;
+        -webkit-transition-duration:0.4s;
+        transition-duration: 0.4s;
+        position:absolute;
+        z-index:9999;
+        border:5px outset #4CAF50;
+            }
+        #cleanAll:hover{
+        background-color: #4CAF50;
+        color: white;
+        }
+        #confirm_location{right: 0;}
+        #icon_header div{text-align: center;}
+        #r-result {
+            width: 60%;
+            background: white;
+            position: absolute;
+            top: 15%;
+            left: 5%;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 4px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        #r-result input {
+            border: none;
+            background: none;
+            outline: none;
+            padding-left: 2%;
+            width: 96%; }
+
+  .modal {
+    display: none; /* 默认隐藏 */
+    position: fixed; /* 根据浏览器定位 */
+    z-index: 1; /* 放在顶部 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 全宽 */
+    height: 100%; /* 全高 */
+    overflow: auto; /* 允许滚动 */
+    background-color: rgba(0,0,0,0.4); /* 背景色 */
+}
+/*模态框内容*/
+.modal-content {
+    display: flex; /*采用flexbox布局*/
+    flex-direction: column; /*垂直排列*/
+    position: relative;
+    background-color: #fefefe;
+    margin: 5% auto; /*距顶部15% 水平居中*/
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    animation: topDown 0.4s; /*自定义动画，从模态框内容上到下出现*/
+}
+@keyframes topDown {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+/*模态框头部*/
+.modal-header {
+    justify-content: center;
+}
+.send{
+    height: 30px;
+    margin:0 0 0 20%;
+}
+.form-label{
+        text-align: right;
+        width: 30%;
+}
+
+/*关闭X 样式*/
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#reports{ margin-top:32px; height:40px;}  
+#reports a   
+{  
+      
+  
+    text-decoration:none;  
+    background:#2f435e;  
+    color:#f2f2f2;  
+      
+    padding: 10px 30px 10px 30px;  
+    font-size:16px;  
+    font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;  
+    font-weight:bold;  
+    border-radius:3px;  
+      
+    -webkit-transition:all linear 0.30s;  
+    -moz-transition:all linear 0.30s;  
+    transition:all linear 0.30s;  
+      
+    }  
+   #reports a:hover { background:#385f9e; } 
+
+     span {
+            text-align: right;
+            width: 200px;
+            display: inline-block;
+        }
+    </style>
+    <!--加载鼠标绘制工具-->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZEpXkzH9v8I3v5guBucD5bY1UpeQIRYV"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+    <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+    
+    
+    <!--加载检索信息窗口-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+    <link rel="stylesheet" href="/css/style_form.css">
+    <script language="javascript" type="text/javascript" src="/js/index/header.js"></script>
+</head>
+
+<body>
+
+<header id="icon_header">
+    <div>
+        <script language="javascript" type="text/javascript" src="/js/index/body.js"></script>
+
+    </div>
+ <a href="javascript:;" id="confirm_location"></a>
+
+</header>
+
+
+<div id="map_show">
+  
+</div>
+
+<div id="r-result">
+    <input type="text" id="suggestId" placeholder="请输入地点"/> 
+
+</div>
+<div id="searchResultPanel" style="display:none;"></div>
+
+<div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+         <ul class="tab-group cl-effect-4">
+        <li class="tab active"><a href="#signin-agile" style="float:left;left:20%">邮箱举报</a></li>
+         <li class="tab"><a href="#signup-agile" style="float:right;right:20%">短信举报</a></li>   
+    </ul>     
+    <div id="closeBtn" class="close">×</div>  
+            </div>
+            
+            <div class="modal-body" > 
+           <div class="form-w3ls">
+   
+   
+    <div class="tab-content">
+        <div id="signin-agile">   
+            <form id="reportForm"  action="##" method="post" enctype="multipart/form-data">
+         <div class="send">
+          <label class="form-label">发信人:</label>
+          <input type="text" name="from"  value="护林网检举系统邮箱" readonly="readonly" style="width:30%">
+          </div>
+          <div class="send">
+        <label class="form-label">举报坐标:</label>
+               经度:<input type="text" name="pointlng" id="pointlng" size="8" readonly="readonly" style="width:16%"> 纬度：<input type="text" id="pointlat" name="pointlat" size="8" readonly="readonly"style="width:16%">
+          </div>
+        <div class="send">
+        <label class="form-label">地域护林员:</label>
+        <input type="text" id="headname" name="headname" readonly="readonly" style="width:30%">
+        </div>
+        <div class="send">
+        <label class="form-label">地域护林员邮箱:</label>
+        <input type="text" id="emailTo" name="emailTo" readonly="readonly" style="width:30%">
+        </div>
+        <div class="send">
+        <label class="form-label">检举主题:</label>
+        <input type="text" id="subject" name="subject" style="width:30%">
+        </div>
+        <input style="margin-left:40%" type="file" name="fileField" class="file" id="fileField" size="28" onchange="document.getElementById('textfield').value=this.value">
+        <div style="text-align:center"><textarea name='reportMsg' id='reportMsg' placeholder="邮箱检举内容" rows="4" cols="60"></textarea>
+        </div>
+        <dr>
+        <div style="text-align:center"><input type="button" id="send" name="send" value="发送" onclick="sendReportEmail()">
+        </div>
+    </form>
+  
+        </div>
+        <div id="signup-agile">   
+            <form id="reportFormBySMS"  action="##" method="post" >
+          <div class="send">
+          <label class="form-label">消息发送者:</label>
+          <input type="text" name="sfrom"  value="护林网" readonly="readonly" style="width:30%">
+          </div>
+        <div class="send">
+          <label class="form-label">举报坐标:</label>
+                   经度：<input type="text" name="pointlng2" id="pointlng2" size="8" readonly="readonly" style="width:16%"> 纬度：<input type="text" id="pointlat2" name="pointlat2" size="8" readonly="readonly"style="width:16%">
+          </div>
+         <div class="send">
+          <label class="form-label">地域护林员:</label><input type="text" id="headname2" name="headname2" readonly="readonly" style="width:30%">
+          </div>
+        <div class="send">
+          <label class="form-label">地域护林员电话:</label><input type="text" id="headPhone" name="headPhone" readonly="readonly" style="width:30%">
+          </div>
+          <div style="text-align:center"><textarea name='SMSMsg' id='SMSMsg' placeholder="短信检举内容" rows="4" cols="60"></textarea></div>
+          <br>
+        <div style="text-align:center"><input type="button" id="send" name="send" value="发送" onclick="sendReportSMS()"></div>
+    </form>
+  
+        </div> 
+    </div><!-- tab-content -->
+</div>               
+  <script src='/js/jquery.min.js'></script>
+  <script language="javascript" type="text/javascript" src="/js/index/logout.js"></script>
+<script src="/js/index/index.js"></script>
+            </div>
+            <div class="modal-footer">
+                <h3></h3>
+            </div>
+        </div>
+    </div>
+    <button type="button"  id="cleanAll"  title="删除所有绘制" onClick="">删除所有</button>
+</body>
+
+
+
+
+<script>
+    function AddMap(){
+        //设置地图容器高度
+        var screenH=window.innerHeight;
+        var headerH=this.elById("icon_header").offsetHeight;
+        this.elById("map_show").style.height=screenH-headerH+"px";
+    }
+
+    /**
+     * @param el 地图初始化容器
+     * @param p  初始化坐标点
+     */
+    //prototype就是“一个给类的对象添加方法的方法”，使用prototype属性，可以给类动态地添加方法，以便在JavaScript中实现“继承”的效果
+    AddMap.prototype.init=function(el,p){
+        var point={
+            lng:116.404113,
+            lat:39.914965
+        };
+        if(p && p.lng && p.lat){
+            point.lng=p.lng;
+            point.lat=p.lat;
+        }
+        this.m = new BMap.Map(el);      //实例化地图
+        this.p = new BMap.Point(point.lng,point.lat);
+       
+
+        this.m=this.setArea(this.m,'诸暨市');
+        this.m.enableContinuousZoom();    //启用地图惯性拖拽
+        this.m.enableScrollWheelZoom();   //启用滚轮放大缩小
+        this.m.centerAndZoom(this.p, 12);  //设置地图显示中间点、地图显示级别
+       
+        this.addMaker(this.p);
+        var pgs=this.setData(this.m);
+        this.search();               //搜索
+        this.getLocation();
+        this.setLocationControll(this.m);
+        this.addMouseBuidler(this.m,pgs);
+        
+      
+       // this.setLocationbyJW(); //依靠经纬度
+    };
+
+
+    AddMap.prototype.setData=function(m){
+
+        var data = [
+    { "lng0":"120.372507" , "lat0":"29.713206" ,"lng1":"120.468518" , "lat1":"29.72224","lng2":"120.460182" , "lat2":"29.671289","lng3":"120.327089" , "lat3":"29.662502","markerlng":"120.406751" , "markerlat":"29.691446","areaId":"1"
+
+    },   
+
+    { "lng0":"120.285695" , "lat0":"29.616294" ,"lng1":"120.419938" , "lat1":"29.612275","lng2":"120.407002" , "lat2":"29.51275","lng3":"120.274484" , "lat3":"29.544679","markerlng":"120.342935" , "markerlat":"29.567877","areaId":"2"},
+
+    { "lng0":"120.081888" , "lat0":"29.65271" ,"lng1":"120.197733" , "lat1":"29.697144","lng2":"120.215268" , "lat2":"29.589664","lng3":"120.109484" , "lat3":"29.55222","markerlng":"120.146314" , "markerlat":"29.623402","areaId":"3"},
+    
+    { "lng0":"120.310129" , "lat0":"29.879443","lng1":"120.427412" , "lat1":"29.860903","lng2":"120.432011" , "lat2":"29.773665", "lng3":"120.252063" , "lat3":"29.80877","markerlng":"120.353859" , "markerlat":"29.828398","areaId":"4"},
+
+    { "lng0":"120.013509" , "lat0":"29.747152","lng1":"120.135966" , "lat1":"29.820878","lng2":"120.164137" , "lat2":"29.742135", "lng3":"120.066401" , "lat3":"29.683916","markerlng":"120.091697" , "markerlat":"29.748156","areaId":"5"}
+   
+    ];
+    
+         var polygons=new Array(5);
+   for ( var i = 0; i <polygons.length; i++){
+        
+    polygons[i] = new BMap.Polygon([
+        new BMap.Point(data[i].lng0, data[i].lat0),
+        new BMap.Point(data[i].lng1, data[i].lat1),
+        new BMap.Point(data[i].lng2, data[i].lat2),
+        new BMap.Point(data[i].lng3, data[i].lat3)
+    ], { strokeColor:"green", strokeWeight: 3, strokeOpacity: 0.5, fillOpacity: 0.1 });
+    m.addOverlay(polygons[i]);
+     var pt=new BMap.Point(data[i].markerlng, data[i].markerlat);
+     var myIcon = new BMap.Icon("https://www.easyicon.net/api/resizeApi.php?id=1183772&size=32", new BMap.Size(32,32));
+     var marker2 = new BMap.Marker(pt,{icon:myIcon});  // 创建标注
+     m.addOverlay(marker2); 
+    }
+     return polygons;
+
+   
+    
+
+    };
+
+
+    //设置行政区域
+   AddMap.prototype.setArea=function(m,cityName){
+    m.setCenter(cityName);                     // 初始化地图,设置中心点坐标和地图级别。    map.addControl(n            
+              //添加缩略地图控件
+   //m.enableScrollWheelZoom();
+   
+    var bdary = new BMap.Boundary();
+    bdary.get(cityName, function (rs) {       //获取行政区域       
+     //   m.clearOverlays();        //清除地图覆盖物  
+       
+        //for循环都删除掉了，只剩下这个
+        //网上查了下，东西经南北纬的范围
+        var EN_JW = "180, 90;";         //东北角
+        var NW_JW = "-180,  90;";       //西北角
+        var WS_JW = "-180, -90;";       //西南角
+        var SE_JW = "180, -90;";        //东南角
+        //4.添加环形遮罩层
+        var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { fillColor: "black", fillOpacity:0.3, strokeOpacity: 0.5 }); //建立多边形覆盖物
+
+        m.addOverlay(ply1);  
+        //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
+        var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#00f",fillColor: "" });
+        m.addOverlay(ply); 
+        //m.setViewport(ply.getPath());    //调整视野
+     });
+       return m;
+   
+    }
+    //获取坐标点位置
+    AddMap.prototype.getLocation=function(){
+        var _this=this;
+        var confirm=this.elById("confirm_location");
+        confirm.addEventListener("click",function(){
+            var makerPoint=_this.makerPoint();
+            console.log(makerPoint)
+            
+        });
+    };
+    //简便元素操作
+    AddMap.prototype.elById=function(id) {
+        return document.getElementById(id);
+    };
+
+    //添加坐标显示
+    AddMap.prototype.addMaker=function(location){
+        var mk = new BMap.Marker(location);
+        mk.enableDragging();        //marker可拖拽
+        mk.enableMassClear();
+        this.m.addOverlay(mk); //在地图中添加marker
+
+        this.makerPoint=function(){
+            return mk.getPosition(); //返回当前坐标
+        };
+
+    };
+
+    AddMap.prototype.addMouseBuidler=function(m,pgs){
+        var _this=this;
+        var overlays = [];
+        var overlaycomplete = function(e){
+        overlays.push(e.overlay);
+        };
+    var styleOptions = {
+        strokeColor:"red",    //边线颜色。
+        fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+        strokeWeight: 3,       //边线的宽度，以像素为单位。
+        strokeOpacity: 0.8,    //边线透明度，取值范围0 - 1。
+        fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
+        strokeStyle: 'solid' //边线的样式，solid或dashed。
+    }
+    //实例化鼠标绘制工具
+    var drawingManager = new BMapLib.DrawingManager(m, {
+        isOpen: false, //是否开启绘制模式
+        enableDrawingTool: true, //是否显示工具栏
+        drawingToolOptions: {
+            anchor: BMAP_ANCHOR_BOTTOM_RIGHT , //位置
+            offset: new BMap.Size(5, 5), //偏离值
+         drawingModes : [BMAP_DRAWING_MARKER],
+                      drawingTypes : [
+                                    BMAP_DRAWING_MARKER  
+                                   
+//////                                  BMAP_DRAWING_POLYLINE,
+//////                                  BMAP_DRAWING_POLYGON,
+////                                    BMAP_DRAWING_RECTANGLE //矩形的样式
+                            ]
+        },
+    
+    });  
+
+   //添加鼠标绘制工具监听事件，用于获取绘制结果
+    drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+    drawingManager.addEventListener('markercomplete', function(e, overlay) {
+    var address;
+   
+    var removeMarker = function(e,ee,marker){
+        m.removeOverlay(marker);
+    }
+    //创建右键菜单
+    var markerMenu=new BMap.ContextMenu();
+    markerMenu.addItem(new BMap.MenuItem('删除',removeMarker.bind(overlay)));
+    
+   
+    overlay.addContextMenu(markerMenu);
+
+    var gc = new BMap.Geocoder();
+     gc.getLocation(e.point, function(rs){
+     var addComp = rs.addressComponents;
+     address = addComp.province  + addComp.city  + addComp.district  + addComp.street  + addComp.streetNumber;
+      
+     var opts={  
+            width:250,//信息窗口宽度height:100,//信息窗口高度  
+            title:"当前位置信息是："//信息窗口标题  
+            
+    }  
+        var isl="(此地点不在服务区)";
+     var content;
+     var json;
+       // getPointMsg pm;
+      for(var i=0,areaId=1;i<pgs.length;i++,areaId++){
+        if(BMapLib.GeoUtils.isPointInPolygon(e.point,pgs[i])){
+            var j=i+1;
+           
+          
+            json= getPointMsg(e.point,areaId);
+             isl="坐标("+e.point.lng+","+e.point.lat+")"+"</br>"+"所处区域(隶属于第"+j+"保护区)" + "</br>"+"地域护林员："+json.headName+ "</br>"+"地域护林员邮箱："+json.headEmail+"</br>"+"联系号码："+json.headPhone;
+                //alert(json.headEmail);
+             //mapInclude.addmodelBoxMsg(e.point,json.headEmail,json.headName);
+                content="<div>"+address+" "+isl+"</div>"+"<div id='reports'>"+"<input type='button'  id='report' value='举报' onclick='mapInclude.report()'/>"+"</div>";
+              break;
+         }else{
+             content="<div>"+address+"<div>"+isl+"</div>"+"<div id='reports'>"+"</div>";
+             
+         }
+      }
+      function setReportFormData(){
+            if(json!=null){
+                _this.elById('headname').value=json.headName;
+                _this.elById('emailTo').value=json.headEmail;
+                _this.elById('pointlng').value=e.point.lng;
+                _this.elById('pointlat').value=e.point.lat;
+                 _this.elById('headname2').value=json.headName;
+              _this.elById('headPhone').value=json.headPhone;
+                _this.elById('pointlng2').value=e.point.lng;
+                _this.elById('pointlat2').value=e.point.lat;
+            }
+
+      }
+      setReportFormData();
+   
+      
+      
+
+     var infoWindow=new BMap.InfoWindow(content,opts);//创建信息窗口对象    
+                   m.openInfoWindow(infoWindow,e.point);//打开信息窗口
+
+
+    overlay.addEventListener("click", function(){          
+        m.openInfoWindow(infoWindow,e.point); //开启信息窗口
+        setReportFormData();
+    });
+  });
+     
+
+                  //  marker.closeInfoWindow(action.infoWindow);
+    /*var mymessage=confirm("确定批注地址"+address+"("+e.point.lng+","+e.point.lat +")举报吗");     
+    if(mymessage==true)
+    {
+        
+    }
+    else if(mymessage==false)
+    {
+        m.removeOverlay(overlay);
+    }*/
+       
+
+    
+});
+
+/* drawingManager.addEventListener("circlecomplete", function(e, overlay) {
+       
+
+     var opts={  
+            width:250,//信息窗口宽度height:100,//信息窗口高度  
+            title:"当前区域信息是："//信息窗口标题  
+            
+    }
+      var infoWindow=new BMap.InfoWindow('',opts);//创建信息窗口对象    
+                   m.openInfoWindow(infoWindow,e.point);//打开信息窗口  
+
+        
+        });*/
+
+      
+      
+    _this.elById("finishPaint").onclick=function(){
+        drawingManager.close();
+    }
+    _this.elById("cleanAll").onclick=function(){
+        for(var i = 0; i < overlays.length; i++){
+            m.removeOverlay(overlays[i]);
+        }
+        overlays.length = 0 ;
+    }
+
+    };
+    
+    AddMap.prototype.report=function(addmb){
+        addmb=new AddModelBox();
+    }
+    AddMap.prototype.addmodelBoxMsg=function(point,email,name){
+       var v1=this.elById("to");
+       v1.value=email;
+       var v2=this.elById("headname");
+       v2.value=name;
+       var v3=this.elById("pointlng");
+       v1.value=point.lng;
+       var v4=this.elById("pointlat");
+       v4.value=point.lat;    
+      }
+
+    AddMap.prototype.delete=function(){
+       m.removeOverlay(overlay);
+    };
+
+    //搜索
+    AddMap.prototype.search=function(){
+        var _this=this;
+        var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+                {
+                    "input" : "suggestId",
+                    "location" : _this.m
+                }
+        );
+        ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+            var _value = e.item.value;
+            myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+            _this.elById("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+            _this.setPlace(_this.m);
+        });
+    };
+
+    // 用经纬度设置地图中心点
+  /* Addmap.prototypr.setLocationbyJW=function(){
+        if(this.elById("longitude").value != "" && this.elById("latitude").value != ""){
+            this.m.clearOverlays(); 
+            var new_point = new BMap.Point(this.elById("longitude").value,this.elById("latitude").value);
+            var marker = new BMap.Marker(new_point);  // 创建标注
+            this.m.addOverlay(marker);              // 将标注添加到地图中
+            this.m.panTo(new_point);      
+        }
+    }*/
+    //定位到具体位置
+    AddMap.prototype.setPlace=function(m){
+        var _this=this;
+        _this.setArea(m,"诸暨市");
+        _this.setData(m);
+        m.clearOverlays();    //清除地图上所有覆盖物
+        function myFun(){
+            var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+            m.centerAndZoom(pp, 15);  //设置地图显示中间点、地图显示级别
+            _this.addMaker(pp);
+        }
+        var local = new BMap.LocalSearch(m, { //智能搜索
+            onSearchComplete: myFun
+        });
+        local.search(myValue);
+    };
+
+//添加导航控件
+ AddMap.prototype.setLocationControll=function(m){
+       
+  // 添加带有定位的导航控件
+  var navigationControl = new BMap.NavigationControl({
+    // 靠左上角位置
+    anchor: BMAP_ANCHOR_TOP_LEFT,
+    // LARGE类型
+    type: BMAP_NAVIGATION_CONTROL_LARGE,
+    // 启用显示定位
+    enableGeolocation: true
+  });
+  m.addControl(navigationControl);
+  // 添加定位控件
+  var geolocationControl = new BMap.GeolocationControl();
+  geolocationControl.addEventListener("locationSuccess", function(e){
+    // 定位成功事件
+    var address = '';
+    address += e.addressComponent.province;
+    address += e.addressComponent.city;
+    address += e.addressComponent.district;
+    address += e.addressComponent.street;
+    address += e.addressComponent.streetNumber;
+    alert("当前定位地址为：" + address);
+  });
+  geolocationControl.addEventListener("locationError",function(e){
+    // 定位失败事件
+    alert(e.message);
+  });
+  m.addControl(geolocationControl);
+};
+
+    var mapInclude=new AddMap();
+  
+    //初始化地图
+    //需传入容器DOM（id），可传坐标点定位
+    mapInclude.init("map_show",{lng:120.252961,lat:29.71579});
+
+   
+</script>
+
+<script type="text/javascript">
+function AddModelBox() {
+  /*建立模态框对象*/
+  var modalBox = {};
+  /*获取模态框*/
+  modalBox.modal = document.getElementById("myModal");
+    /*获得trigger按钮*/
+  //modalBox.triggerBtn = document.getElementById("triggerBtn");
+    /*获得关闭按钮*/
+  modalBox.closeBtn = document.getElementById("closeBtn");
+  /*模态框显示*/
+  modalBox.show = function() {
+    console.log(this.modal);
+    this.modal.style.display = "block";
+  }
+  /*模态框关闭*/
+  modalBox.close = function() {
+    this.modal.style.display = "none";
+  }
+  /*当用户点击模态框内容之外的区域，模态框也会关闭*/
+  modalBox.outsideClick = function() {
+    var modal = this.modal;
+    window.onclick = function(event) {
+            if(event.target == modal) {
+              modal.style.display = "none";
+            }
+    }
+  }
+    /*模态框初始化*/
+  modalBox.init = function() {
+    var that = this;
+    that.show();
+    this.closeBtn.onclick = function() {
+      that.close();
+    }
+    this.outsideClick();
+  }
+  modalBox.init()
+ 
+};
+//var addmd=new AddModelBox();
+
+</script>
+
+<script type="text/javascript">
+ function getPointMsg(point,i){
+     var json={};
+
+     $.ajax({
+         type: "POST",   
+         async: false,                        //传数据的方式
+         url: "http://localhost:8080/hlw/backstage/reportPoint",
+//servlet地址,需要提前在web.xml里面注册
+         dataType:"json",
+         data: {'lng':point.lng,'lat':point.lat,'AreaId':i},      //传的数据  form表单 里面的数据
+         success: function(result){       //传数据成功之后的操作   result是servlet传过来的数据  这个函数对result进行处理，让它显示在 输入框中
+                  
+                  json.headName=result.headName;
+                  json.headEmail=result.headEmail;
+                  json.headPhone=result.headPhone;
+                  //将json格式的string转换成json,JSON.stringify(data),
+
+
+         },
+         error : function() {
+             alert("异常！");
+         }
+     });
+     return json;
+  }
+
+
+ function sendReportEmail(){
+     var fromData = new FormData($("#reportForm")[0]);
+
+       $.ajax({
+                async : false,
+                cache : false,
+             type: "POST",                                  //传数据的方式
+             url: "http://localhost:8080/hlw/backstage/reportEvent",
+    //servlet地址,需要提前在web.xml里面注册
+             dataType:"text",
+             contentType: false, //必须
+             processData: false, //必须
+             data: fromData,      //传的数据  form表单 里面的数据
+             success: function(result){       //传数据成功之后的操作   result是servlet传过来的数据  这个函数对result进行处理，让它显示在 输入框中
+                      
+                    
+           alert(result);     
+   
+    
+         $("#myModal").modal("hide");  
+           
+                      //将json格式的string转换成json,JSON.stringify(data),
+
+
+             },
+             error : function() {
+                 alert("异常！");
+             }
+         });
+ }
+
+ function sendReportSMS(){
+    
+
+       $.ajax({
+                
+             type: "POST",                                  //传数据的方式
+             url: "http://localhost:8080/hlw/backstage/reportEventbySMS",
+    //servlet地址,需要提前在web.xml里面注册
+             dataType:"text",
+            
+             data: $('#reportFormBySMS').serialize(),      //传的数据  form表单 里面的数据
+             success: function(result){       //传数据成功之后的操作   result是servlet传过来的数据  这个函数对result进行处理，让它显示在 输入框中
+                      alert(result);
+                    
+        
+             },
+             error : function() {
+                 alert("异常！");
+             }
+         });
+ }
+
+</script>
+</html>

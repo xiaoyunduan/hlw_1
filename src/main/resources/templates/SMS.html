@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>sms</title>
+
+
+			<form id="reportForm"  action="##" method="post">
+				
+				 <br>横坐标<input type="text" name="pointlng" id="pointlng" size="8" >纵坐标<input type="text" id="pointlat" name="pointlat" size="8">
+         <br>护林员 <span><input type="text" id="headname" name="headname"></span>
+          <br>手机: <span><input type="text" id="headPhone" name="headPhone"></span>
+        
+				
+				<input type="button" class="sign-in" onclick="sendReportSMS()" value="发送">
+			</form>
+		
+<!-- js files -->
+<script src='/js/jquery.min.js'></script>
+
+
+<script type="text/javascript">
+
+function sendReportSMS(){
+    
+
+       $.ajax({
+                
+             type: "POST",                                  //浼犳暟鎹殑鏂瑰紡
+             url: "http://localhost:8080/hlw/backstage/reportEventbySMS",
+    //servlet鍦板潃,闇�瑕佹彁鍓嶅湪web.xml閲岄潰娉ㄥ唽
+             dataType:"text",
+           
+             data: $('#reportForm').serialize(),      //浼犵殑鏁版嵁  form琛ㄥ崟 閲岄潰鐨勬暟鎹�
+             success: function(result){       //浼犳暟鎹垚鍔熶箣鍚庣殑鎿嶄綔   result鏄痵ervlet浼犺繃鏉ョ殑鏁版嵁  杩欎釜鍑芥暟瀵箁esult杩涜澶勭悊锛岃瀹冩樉绀哄湪 杈撳叆妗嗕腑
+                      alert("success");
+                    
+        
+             },
+             error : function() {
+                 alert("异常");
+             }
+         });
+ }
+</script>
+<!-- /js files -->
+</body>
+</html>

@@ -1,0 +1,254 @@
+
+ol,ul {
+	list-style:none;
+	margin:0px;
+	padding:0px;
+}
+blockquote,q {
+	quotes:none;
+}
+blockquote:before,blockquote:after,q:before,q:after {
+	content:'';
+	content:none;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+
+/* start editing from here */
+a {
+	text-decoration:none;
+}
+.txt-rt {
+	text-align:right;
+}/* text align right */
+.txt-lt {
+	text-align:left;
+}/* text align left */
+.txt-center {
+	text-align:center;
+/*-- W3Layouts --*/	
+}/* text align center */
+.float-rt {
+	float:right;
+}/* float right */
+.float-lt {
+	float:left;
+}/* float left */
+.clear {
+	clear:both;
+}/* clear float */
+.pos-relative {
+	position:relative;
+}/* Position Relative */
+.pos-absolute {
+	position:absolute;
+}/* Position Absolute */
+.vertical-base {	
+	vertical-align:baseline;
+}/* vertical align baseline */
+.vertical-top {	
+	vertical-align:top;
+}/* vertical align top */
+nav.vertical ul li {	
+	display:block;
+}/* vertical menu */
+nav.horizontal ul li {	
+	display: inline-block;
+}/* horizontal menu */
+
+
+/*--- end reset code ---*/
+
+html {
+  overflow-y: scroll;
+}
+
+
+
+.tab-group {
+	list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+}
+.tab-group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.tab-group li a {
+  display: block;
+  text-decoration: none;
+  padding: 15px;
+  color: #212121;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: .5s ease;
+  transition: .5s ease;
+}
+.tab-group li a:hover {
+  color: #212121;
+}
+.tab-group .active a {
+  color: #212121;
+}
+.tab-content > div:last-child {
+  display: none;
+}
+.cl-effect-4 li a {
+	position:relative;
+}
+.cl-effect-4 li a::after {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	background:#a0da4f;
+	content: '';
+	opacity: 0;
+	-webkit-transition: height 0.3s, opacity 0.3s, -webkit-transform 0.3s;
+	-moz-transition: height 0.3s, opacity 0.3s, -moz-transform 0.3s;
+	transition: height 0.3s, opacity 0.3s, transform 0.3s;
+	-webkit-transform: translateY(-10px);
+	-moz-transform: translateY(-10px);
+	transform: translateY(-10px);
+}
+.cl-effect-4 li.active a::after, .cl-effect-4 li a:hover::after, .cl-effect-4 li a:focus::after {
+    height: 2px;
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+    -moz-transform: translateY(0px);
+    transform: translateY(0px);
+}
+/*-- Sign In Form --*/
+p.header {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212121;
+    letter-spacing: 1px;
+    text-transfordiv#signin-agile input[type="text"],div#signin-agile input[type="password"],div#signup-agile input[type="text"],div#signup-agile input[type="email"],div#signup-agile input[type="tel"], div#signup-agile input[type="password"] {
+	padding: 10px;
+    width: 100%;
+    border-bottom: 2px solid #a0da4f;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    color: #212121;
+    text-align: left;
+    outline: none;
+    letter-spacing: 1px;
+    font-size: 16px;
+    margin-top: 1em;
+    margin-bottom: 2em;
+    font-weight: 600;
+    font-family: 'Poiret One', cursive;
+    background: none;
+}m: uppercase;
+}
+
+
+/*--checkbox--*/
+div#signin-agile input[type="checkbox"] {
+    display: none;
+}
+div#signin-agile input[type="checkbox"]+label {
+    position: relative;
+    padding-left: 2em;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    color: #212121;
+    font-weight: 400;
+    cursor: pointer;
+}
+div#signin-agile input[type="checkbox"]+label span:first-child {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #a0da4f;
+    position: absolute;
+    left: 0;
+	background:#a0da4f;
+	top:3px;
+}
+div#signin-agile input[type="checkbox"]:checked+label span:first-child:before {
+    content: "";
+    background: url(../images/tick.png)no-repeat;
+    position: absolute;
+    left:0px;
+    top:0px;
+    font-size: 10px;
+    width: 10px;
+    height: 10px;
+}
+/*--//checkbox--*/
+div#signin-agile .sign-in {
+	font-size: 20px;
+	font-weight: 600;
+	text-transform: uppercase;
+	width: 100%;
+	cursor: pointer;
+	letter-spacing: 1px;
+	padding: 10px;
+	margin-top: 30px;
+	border: none;
+	outline: none;
+	color: #212121;
+	background-color: #a0da4f;
+	font-family: 'Sansita', sans-serif;
+	transition: all 0.5s ease-in-out;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+}
+div#signin-agile .sign-in:hover {
+	background-color: #84bf31;
+	font-family: 'Sansita', sans-serif;
+	
+	color: #000000;
+}
+/*-- /Sign In Form --*/
+/*-- Sign Up Form --*/
+div#signup-agile .register {
+	padding: 10px;
+	background-color: #a0da4f;
+	width: 100%;
+	border: none;
+	cursor: pointer;
+	color: #000000;
+	outline: none;
+	letter-spacing: 1px;
+	font-weight: 600;
+	font-family: 'Sansita', sans-serif;
+	font-size: 20px;
+	margin-top: 5%;
+	text-transform: uppercase;
+	-webkit-transition: all 0.5s ease-in-out;
+	-moz-transition: all 0.5s ease-in-out;
+	-o-transition: all 0.5s ease-in-out;
+}
+div#signup-agile .register:hover {
+	background-color: #84bf31;
+	color: #000000;
+}
+/*-- /Sign Up Form --*/
+p.copyright {
+	font-size: 16px;
+	font-weight: normal;
+	letter-spacing: 1px;
+	text-align: center;
+	padding: 50px 0;
+	color: #fff;
+}
+p.copyright a {
+	color: #7bf904;;
+}
+p.copyright a:hover {
+	color: #b0b5a9;
+}
+/*-- Responsive start here --*/
+
+	
+}
